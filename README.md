@@ -7,7 +7,9 @@ Sukurta struktūra duomenys naudojant klasę, nebe sturtūrą.
 *Greičio analizė lyginant su sturktūros greičiu
 
 ![2021-12-03](https://user-images.githubusercontent.com/91305186/149848937-c54f8e08-301e-4f09-921e-6177e48459dc.png)
+* Klasės greičiai
 
+![2022-01-18 (2)](https://user-images.githubusercontent.com/91305186/149849241-1a05d76f-e6f4-4af3-aa55-8e59a67988ee.png)
 
 # v1.2
 
