@@ -55,7 +55,7 @@ Vardas53               Pavarde53                     10         5         3     
 Vardas54               Pavarde54                      9         5         3        10         2         1         5         7         4         7         5         5         7         4         1         6
 Vardas55               Pavarde55                      4        10         4         6         4         4        10         5         2         8         1         1         2         7         9         9
 Vardas56               Pavarde56                      6         8         7         1         7         7         3         9         2         7         5         2         6         2         4         5
-Vardas57               Pavarde57                      1         2         9         7         2         1         5         6         7         7         6         7         6         5         3         5
+Vardas57               Pavarde57                      1         2         5         7         2         1         5         6         7         7         6         7         6         5         3         5
 Vardas58               Pavarde58                      8         4        10        10         6         9         5         7         2        10         9         7         3        10         4         4
 Vardas59               Pavarde59                      9         9         2         9         4         1         5         1         7         5         2         8         3         1         5         5
 Vardas60               Pavarde60                      4         4         8         5         8         6        10         2         5         2         6         8         8        10         2         6
