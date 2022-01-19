@@ -28,7 +28,7 @@ using namespace std;
     int kiete=0;
     for (int i=0; i<p; i++)
     {
-        if(A[i].getGalutinis_egz() < 5.00)
+        if(A[i].getGalutinis_egz() < 5.00 )
         {
             vargsiukai.resize(vargs+1);
             vargsiukai[vargs] = A[i];
@@ -42,20 +42,44 @@ using namespace std;
         }
     }
 }
-void paskirstymo_isve(vector<duomenys> vargsiukai, vector<duomenys> kietekai)
+void paskirstymo_isve(vector<duomenys> vargsiukai, vector<duomenys> kietekai, string pasirinkimas)
 {
     std::ofstream duom_maz5("vargsiukai.txt");
     std::ofstream duom_daug5("kietekai.txt");
-    for (auto i=0; i<vargsiukai.size(); i++)
+
+        duom_maz5<<setw(20)<<std::left<<"Vardas"<<setw(20)<<std::left<<"Pavarde";
+        if (pasirinkimas == "G" || pasirinkimas == "g")
+        {duom_maz5<<setw(20)<<std::left<<"Galutinis(egz.)\n";}
+        else{duom_maz5<<setw(20)<<std::left<<"Mediana\n";}
+        duom_maz5<<"-------------------------------------------------------\n";
+        for (int i=0; i<vargsiukai.size(); i++)
     {
-        duom_maz5<<setw(20)<<std::left<<vargsiukai[i].getVardas()<<setw(20)<<std::left<<vargsiukai[i].getPavarde()<<setw(20)<<std::setprecision(2)<<std::left<<vargsiukai[i].getGalutinis_egz()<<endl;
+        duom_maz5<<setw(20)<<vargsiukai[i].getVardas()<<setw(20)<<vargsiukai[i].getPavarde();
+        if (pasirinkimas == "G" || pasirinkimas == "g")
+        {duom_maz5<<setw(20)<<std::setprecision(2)<<vargsiukai[i].getGalutinis_egz()<<endl;}
+        else{duom_maz5<<setw(20)<<mediana1(vargsiukai[i].getPazymiai())<<endl;}
     }
-    duom_maz5.close();
-    for (auto i=0; i<kietekai.size(); i++)
+        duom_maz5<<"\n\n";
+        duom_maz5.close();
+
+
+        duom_daug5<<setw(20)<<std::left<<"Vardas"<<setw(20)<<std::left<<"Pavarde";
+        if (pasirinkimas == "G" || pasirinkimas == "g")
+        {duom_daug5<<setw(20)<<std::left<<"Galutinis(egz.)\n";}
+        else{duom_daug5<<setw(20)<<std::left<<"Mediana\n";}
+        duom_daug5<<"-------------------------------------------------------\n";
+
+        for (int i=0; i<kietekai.size(); i++)
     {
-        duom_daug5<<setw(20)<<std::left<<kietekai[i].getVardas()<<setw(20)<<std::left<<kietekai[i].getPavarde() <<setw(20)<<std::setprecision(2)<<std::left<<kietekai[i].getGalutinis_egz()<<endl;
+        duom_daug5<<setw(20)<<kietekai[i].getVardas()<<setw(20)<<kietekai[i].getPavarde();
+        if (pasirinkimas == "G" || pasirinkimas == "g")
+        {duom_daug5<<setw(20)<<std::setprecision(2)<<kietekai[i].getGalutinis_egz()<<endl;}
+        else{duom_daug5<<setw(20)<<mediana1(kietekai[i].getPazymiai())<<endl;}
     }
-    duom_daug5.close();
+        duom_daug5<<"\n\n";
+        duom_daug5.close();
+
+
 }
 
 void duokiteRinktis(int &p, string &pasirinkimas, int &paz){
@@ -119,7 +143,7 @@ int main()
     cout<<"Skirstymas uztruko"<<duration<<"s"<<endl;
 
     start=std::clock();
-    paskirstymo_isve(varg,kiete);
+    paskirstymo_isve(varg,kiete,pasirinkimas);
     duration=(std::clock() - start) /(double)CLOCKS_PER_SEC;
     cout<<"Isvedimas uztruko"<<duration<<"s"<<endl;
     }
@@ -145,7 +169,7 @@ int main()
     duration=(std::clock() - start) /(double)CLOCKS_PER_SEC;
     cout<<"Skirstymas uztruko"<<duration<<"s"<<endl;
 
-    paskirstymo_isve(varg,kiete);
+    paskirstymo_isve(varg,kiete,pasirinkimas);
 
     }
 
