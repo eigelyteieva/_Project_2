@@ -1,1 +1,8 @@
-# _Project_2
+# 2 DALIS
+
+
+
+# v1.2
+
+Realizuotas operatorius turimai duomenys klasei. 
+
