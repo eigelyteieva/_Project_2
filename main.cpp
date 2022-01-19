@@ -16,128 +16,73 @@ using std::istream;
 using std::sort;
 using std::vector;
 using std::to_string;
-///Čia yra abstrakti "zmogus" klasė
-class zmogus{
-public:
-    virtual void setVardas(string vardass) = 0; ///Vardo setteris
-    virtual string getVardas() = 0; ///Vardo getteris
-    virtual float getEgzamino_rez() = 0; ///Egzamino rezultatų getteris
-    virtual void setPavarde(string p) = 0; ///Pavardės setteris
-    virtual string getPavarde() = 0; ///Pavardės getteris
-    virtual void setPazymiai(float pa) = 0; ///Pažymių setteris
-    virtual vector<float> getPazymiai() = 0;///Pažymių getteris
-    virtual void setEgzamino_rez(float e) = 0; ///Egzamino rezultatų setteris
-    virtual float getGalutinis_egz() = 0; ///Galutinio egzamino rezultatų getteris
-    virtual void setGalutinis_egz(float g) =0;///Galutinio egzamino rezultatų setteris
-};
-///Cia yra klasė "duomenys" kuri yra paveldėtos abstrakčios klasės "zmogus" vaikinė klasė
-class duomenys : public zmogus{
-    private:
-    string vardas, pavarde;
-    vector<float> pazymiai;
-    float egzamino_rez;
-    float galutinis_egz;
 
-    public:
-    duomenys (string vardas, string pavarde, vector <float>pazymiai, float egzamino_rez, float galutinis_egz ){
-    this->vardas = vardas;
-    this->pavarde = pavarde;
-    this->pazymiai = pazymiai;
-    this->egzamino_rez = egzamino_rez;
-    this->galutinis_egz = galutinis_egz;
-    }
+#include "papildomos_funkcijos.h"
+#include "funkcijos.h"
+#include "klase.h"
 
-    //konstruktoius
-    duomenys(){};
-    void setVardas(string v)
-    {
-        vardas = v;
-    }
-    string getVardas()
-    {
-        return vardas;
-    }
-
-    void setPavarde(string p)
-    {
-        pavarde = p;
-    }
-    string getPavarde()
-    {
-        return pavarde;
-    }
-    void setPazymiai(float pa)
-    {
-        pazymiai.push_back(pa);
-    }
-    vector<float> getPazymiai()
-    {
-        return pazymiai;
-    }
-
-    void setEgzamino_rez(float e)
-    {
-        egzamino_rez = e;
-    }
-    float getEgzamino_rez()
-    {
-        return egzamino_rez;
-    }
-
-    void setGalutinis_egz(float g)
-    {
-        galutinis_egz = g;
-    }
-    float getGalutinis_egz()
-    {
-        return galutinis_egz;
-    }
-    duomenys& operator= (const duomenys& duom)
-    {
-
-    vardas = duom.vardas;
-    pavarde = duom.pavarde;
-    pazymiai = duom.pazymiai;
-    egzamino_rez = duom.egzamino_rez;
-    galutinis_egz = duom.galutinis_egz;
-    return *this;
-    }
-    //destruktorius
-    ~duomenys(){};
-
-};
-float mediana(vector<int> pazymiai)//
+ void paskirstymas(vector<duomenys>&A,int p,vector<duomenys> &vargsiukai, vector<duomenys> &kietekai)
 {
-    sort (pazymiai.begin(), pazymiai.end());
-    if (pazymiai.size() % 2 != 0)
-    {return pazymiai[pazymiai.size()/2];}
-    else
-    {return (double)(pazymiai[(pazymiai.size() - 1)/2]+pazymiai[pazymiai.size()/2])/2.0;}
+    int vargs=0;
+    int kiete=0;
+    for (int i=0; i<p; i++)
+    {
+        if(A[i].getGalutinis_egz() < 5.00)
+        {
+            vargsiukai.resize(vargs+1);
+            vargsiukai[vargs] = A[i];
+            vargs++;
+        }
+        else
+        {
+            kietekai.resize(kiete+1);
+            kietekai[kiete] = A[i];
+            kiete++;
+        }
+    }
 }
-float mediana1(vector<float> pazymiai)
+void paskirstymo_isve(vector<duomenys> vargsiukai, vector<duomenys> kietekai, string pasirinkimas)
 {
-    sort (pazymiai.begin(), pazymiai.end());
-    if (pazymiai.size() % 2 != 0)
-    {return pazymiai[pazymiai.size()/2];}
-    else
-    {return (double)(pazymiai[(pazymiai.size() - 1)/2]+pazymiai[pazymiai.size()/2])/2.0;}
+    std::ofstream duom_maz5("vargsiukai.txt");
+    std::ofstream duom_daug5("kietekai.txt");
+
+        duom_maz5<<setw(20)<<std::left<<"Vardas"<<setw(20)<<std::left<<"Pavarde";
+        if (pasirinkimas == "G" || pasirinkimas == "g")
+        {duom_maz5<<setw(20)<<std::left<<"Galutinis(egz.)\n";}
+        else{duom_maz5<<setw(20)<<std::left<<"Mediana\n";}
+        duom_maz5<<"-------------------------------------------------------\n";
+        for (int i=0; i<vargsiukai.size(); i++)
+    {
+        duom_maz5<<setw(20)<<vargsiukai[i].getVardas()<<setw(20)<<vargsiukai[i].getPavarde();
+        if (pasirinkimas == "G" || pasirinkimas == "g")
+        {duom_maz5<<setw(20)<<std::setprecision(2)<<vargsiukai[i].getGalutinis_egz()<<endl;}
+        else{duom_maz5<<setw(20)<<mediana1(vargsiukai[i].getPazymiai())<<endl;}
+    }
+        duom_maz5<<"\n\n";
+        duom_maz5.close();
+
+
+        duom_daug5<<setw(20)<<std::left<<"Vardas"<<setw(20)<<std::left<<"Pavarde";
+        if (pasirinkimas == "G" || pasirinkimas == "g")
+        {duom_daug5<<setw(20)<<std::left<<"Galutinis(egz.)\n";}
+        else{duom_daug5<<setw(20)<<std::left<<"Mediana\n";}
+        duom_daug5<<"-------------------------------------------------------\n";
+
+        for (int i=0; i<kietekai.size(); i++)
+    {
+        duom_daug5<<setw(20)<<kietekai[i].getVardas()<<setw(20)<<kietekai[i].getPavarde();
+        if (pasirinkimas == "G" || pasirinkimas == "g")
+        {duom_daug5<<setw(20)<<std::setprecision(2)<<kietekai[i].getGalutinis_egz()<<endl;}
+        else{duom_daug5<<setw(20)<<mediana1(kietekai[i].getPazymiai())<<endl;}
+    }
+        duom_daug5<<"\n\n";
+        duom_daug5.close();
+
+
 }
-std::vector<int> automatiniai_paz(int pazkiekis)
-{
-    int kiekis = rand() % 10+1 ;
-	std::vector<int> rezultatai;
-	for (int i = 0; i < pazkiekis; i++)
-	{
-		rezultatai.push_back(kiekis);
-	}
-	return rezultatai;
-}
-int duom_automatinis(vector<int> pazymiai, string &pasirinkimas, int &p)
-{
+void duokiteRinktis(int &p, string &pasirinkimas, int &paz){
     int failo_pasirinkimas;
-
-
-    cout<<"Pasirinkite, kurio dydzio failz noresite sugeneruoti: 1 - 1000 duomenu, 2 - 10 000 duomenu, 3 - 100 000 duomenu, 4 - 1 000 000 duomenu, 5 - 10 000 000 duomenu"<<endl;
+    cout<<"Pasirinkite, kurio dydzio faila noresite nuskaityti: 1 - 1000 duomenu, 2 - 10 000 duomenu, 3 - 100 000 duomenu, 4 - 1 000 000 duomenu, 5 - 10 000 000 duomenu"<<endl;
     cin>>failo_pasirinkimas;
 
     if (failo_pasirinkimas == 1) { p = 1000;}
@@ -149,190 +94,15 @@ int duom_automatinis(vector<int> pazymiai, string &pasirinkimas, int &p)
 
     cout<<"Jeigu norite matyti galutini egzamino pazymi spauskite G, jeigu mediana - M"<<endl;
     cin>>pasirinkimas;
-
     if ((pasirinkimas != "G") && (pasirinkimas != "g") && (pasirinkimas != "M") && (pasirinkimas != "m") )
     {
         cout<<"Ivedete netinkama simboli"<<endl;
         cout<<"Jeigu norite matyti galutini egzamino pazymi spauskite G, jeigu mediana - M";
         cin>>pasirinkimas;
     }
+    cout<<"Iveskite kiek pazymiu yra faile"<<endl;
+    cin>>paz;
 
-    vector<int> rezultatai;
-    string pavadinimas = to_string(p) + ".txt";
-    std::ofstream isve(pavadinimas);
-    duomenys A;
-
-    isve<<setw(20)<<std::left<<"Vardas"
-    <<setw(20)<<std::left<<"Pavarde";
-    if (pasirinkimas == "G" || pasirinkimas == "g")
-    {isve<<setw(20)<<std::left<<"Galutinis(egz.)\n"<<endl;}
-    else{isve<<setw(20)<<std::left<<"Mediana\n"<<endl;}
-    for(int k=1; k <= p; k = k+1)
-    {
-         rezultatai = automatiniai_paz(10);
-         int egzamino_rez = rand() %10+1;
-         float galutinis_egz = 0.4 * std::accumulate(rezultatai.begin(), rezultatai.end(), 0) / rezultatai.size() + 0.6 *egzamino_rez ;
-
-         isve<<setw(20)<<"Vardas"+to_string(k)<<setw(20)<<"Pavarde"+to_string(k);
-         if (pasirinkimas == "G" || pasirinkimas == "g")
-            {isve<<setw(20)<<std::setprecision(2)<<galutinis_egz<<endl;}
-         else{isve<<setw(20)<<mediana(rezultatai)<<endl;}
-         rezultatai.clear();
-    }
-    return p;
-}
-bool isNumber(const string& str)
-{
-    for (char const &c : str) {
-        if (std::isdigit(c) == 0) return false;
-    }
-    return true;
-}
-int sveikoSkaiciausPatikrinimas()
-{
-    string laikinas;
-    int temp;
-    while(1){
-        cin>>laikinas;
-        if(isNumber(laikinas) == true){
-            temp = stoi(laikinas);
-            if(((temp >= 0) && (temp <= 10)))
-            break;
-            else cout<<"Ivedete neteisinga simboli"<<endl<<"Pabandykite dar karta: ";
-        }
-        else cout<<"Ivedete neteisinga simboli"<<endl<<"Pabandykite dar karta: ";
-    }
-    return temp;
-}
-int studentuskaiciaustikrinimas()
-{
-    string laikinas;
-    int temp;
-    while(1){
-        cin>>laikinas;
-        if(isNumber(laikinas) == true){
-            temp = stoi(laikinas);
-            if(((temp >= 0) && (temp <= 100)))
-            break;
-            else cout<<"Ivedete neteisinga simboli"<<endl<<"Pabandykite dar karta: ";
-        }
-        else cout<<"Ivedete neteisinga simboli"<<endl<<"Pabandykite dar karta: ";
-    }
-    return temp;
-}
-vector<duomenys> duom_rankinis (vector<duomenys> A,int &p, string &pasirinkimas)
-{
-    cout<<"Iveskite studentu skaiciu: "<<endl;
-    p = studentuskaiciaustikrinimas();
-    duomenys s;
-    for(int i=0; i<p; i++)
-    {   string laikinas1, laikinas2;
-        cout<<"Iveskite "<<i+1<<"-o varda ir pavarde: ";
-        cin>>laikinas1>>laikinas2;
-        s.setVardas(laikinas1);
-        s.setPavarde(laikinas2);
-        float suma=0;
-        int pazymiu_skaicius = 0;
-        cout<<"Iveskite "<<i+1<<"studento pazymius, kai baigsite vesti - iveskite 0"<<endl;
-        float temp;
-        cout<<"1 pazymis: ";
-        while ((temp = sveikoSkaiciausPatikrinimas()) && (temp!=0))
-        {
-            cout<< pazymiu_skaicius + 2 <<" pazymis: ";
-            s.setPazymiai(temp);
-            suma+=temp;
-            pazymiu_skaicius++;
-        }
-        cout<<"Iveskite "<<i+1<<" studento egzamino rezultata: ";
-        s.setEgzamino_rez(sveikoSkaiciausPatikrinimas());
-        s.setGalutinis_egz(0.4*(suma/(s.getPazymiai().size()))+0.6*s.getEgzamino_rez());
-        A.push_back(s);
-    }
-    cout<<"Jeigu norite matyti galutini egzamino pazymi spauskite G, jeigu mediana - M"<<endl;
-    cin>>pasirinkimas;
-     if ((pasirinkimas != "G") && (pasirinkimas != "g") && (pasirinkimas != "M") && (pasirinkimas != "m") )
-    {
-        cout<<"Ivedete netinkama simboli"<<endl;
-        cout<<"Jeigu norite matyti galutini egzamino pazymi spauskite G, jeigu mediana - M";
-        cin>>pasirinkimas;
-    }
-    return A;
-}
-void spausdinimas (vector<duomenys> A,string pasirinkimas, int p)
-{
-
-    string pavadinimas = to_string(p) + ".txt";
-    std::ofstream isve;
-    isve.open(pavadinimas);
-    isve<<setw(20)<<std::left<<"Vardas"<<setw(20)<<std::left<<"Pavarde";
-    if (pasirinkimas == "G" || pasirinkimas == "g")
-    {isve<<setw(20)<<std::left<<"Galutinis(egz.)\n";}
-    else{isve<<setw(20)<<std::left<<"Mediana\n";}
-    isve<<"-------------------------------------------------------\n";
-    for (int i=0; i<A.size(); i++)
-    {
-        isve<<setw(20)<<A[i].getVardas()<<setw(20)<<A[i].getPavarde();
-        if (pasirinkimas == "G" || pasirinkimas == "g")
-        {isve<<setw(20)<<std::setprecision(2)<<A[i].getGalutinis_egz()<<endl;}
-        else{isve<<setw(20)<<mediana1(A[i].getPazymiai())<<endl;}
-    }
-    isve<<"\n\n";
-}
-
-void skaitymas(vector<duomenys>& A,int p)
-{
-    int studentu_sk =0 ;
-    std::ifstream duom;
-    string k;
-    string laikinas;
-    float laikinas2;
-    string pavadinimas = to_string(p)+".txt";
-
-    duom.open(pavadinimas);
-    if(duom.is_open())
-    {
-        getline(duom>>std::ws, k);
-        while(studentu_sk < p)
-        {
-            A.resize(A.size()+1);
-            duom>>laikinas;
-            A.at(studentu_sk).setVardas(laikinas);
-            duom>>laikinas;
-            A.at(studentu_sk).setPavarde(laikinas);
-            duom>>laikinas2;
-            A.at(studentu_sk).setGalutinis_egz(laikinas2);
-            studentu_sk++;
-        }
-    }
-}
- void paskirstymas(vector<duomenys>&A,vector<duomenys> &vargsiukai)
-{
-    int u=0;
-    cout<<A.size();
-    for (int i=0; i<A.size(); i++)
-    {
-        if(A[i].getGalutinis_egz() < 5.00)
-        {
-            vargsiukai.push_back(A[i]);
-            A.erase(A.begin() + i);
-            i--;
-        }
-    }
-}
-void paskirstymo_isve(vector<duomenys> A, vector<duomenys> vargsiukai,string pasirinkimas,int p)
-{
-    std::ofstream duom_maz5("vargsiukai.txt");
-
-    string pavadinimas = to_string(p)+".txt";
-    ofstream failas(pavadinimas, ofstream::trunc);
-
-    spausdinimas (A,pasirinkimas,p);
-
-    for (auto i=0; i<vargsiukai.size(); i++)
-    {
-        duom_maz5<<setw(20)<<std::left<<vargsiukai[i].getVardas()<<setw(20)<<std::left<<vargsiukai[i].getPavarde()<<setw(20)<<std::left<<vargsiukai[i].getGalutinis_egz()<<endl;
-    }
-    duom_maz5.close();
 }
 
 int main()
@@ -342,11 +112,12 @@ int main()
     string duom_pasirinkimas,pasirinkimas;
     int p;
     int n;
+    int paz;
     int B;
     int C;
-    cout<<"Jeigu norite duomenis ivesti rankiniu butu spauskite R,jeigu norite, kad duomenys sugeneruotu atsitiktinai i faila spauskite A";
+    cout<<"Jeigu norite duomenis ivesti rankiniu butu spauskite R,jeigu norite, kad duomenys sugeneruotu atsitiktinai i faila spauskite F";
     cin>>duom_pasirinkimas;
-    if ((duom_pasirinkimas != "R") && (duom_pasirinkimas != "r") && (duom_pasirinkimas != "A") && (duom_pasirinkimas != "a"))
+    if ((duom_pasirinkimas != "R") && (duom_pasirinkimas != "r") && (duom_pasirinkimas != "F") && (duom_pasirinkimas != "f"))
     {
         cout<<"Ivedete netinkama simboli"<<endl;
         cout<<"Jeigu norite duomenis ivesti rankiniu butu spauskite R,jeigu norite, kad duomenys sugeneruotu atsitiktinai spauskite A";
@@ -361,30 +132,29 @@ int main()
 
     start=std::clock();
 
-    vector<duomenys> varg ={};
+    vector<duomenys> varg;
+    vector<duomenys> kiete;
 
-    paskirstymas(A,varg);
+
+    paskirstymas(A,B,varg,kiete);
     double duration=(std::clock() - start) /(double)CLOCKS_PER_SEC;
     cout<<"Skirstymas uztruko"<<duration<<"s"<<endl;
 
     start=std::clock();
-    paskirstymo_isve(A,varg,pasirinkimas,p);
+    paskirstymo_isve(varg,kiete);
     duration=(std::clock() - start) /(double)CLOCKS_PER_SEC;
     cout<<"Isvedimas uztruko"<<duration<<"s"<<endl;
     }
     else
     {
 
-        all=std::clock();
-        start=std::clock();
-        vector<int>rezultatai;
-        B = duom_automatinis(rezultatai,pasirinkimas,p);
-        double duration =(std::clock()-start)/(double)CLOCKS_PER_SEC;
-        cout<<"GENERAVIMAS UZTRUKO"<<duration<<"s"<<endl;
+        duokiteRinktis(B,pasirinkimas,paz);
 
     start=std::clock();
-    skaitymas(A,B);
-    duration = (std::clock() - start)/(double)CLOCKS_PER_SEC;
+
+    skaitymas(A,B,paz);
+
+    double duration = (std::clock() - start)/(double)CLOCKS_PER_SEC;
     cout<<"SKAITYMAS UZTRUKO"<<duration<<"s"<<endl;
 
     start=std::clock();
@@ -392,14 +162,12 @@ int main()
     vector<duomenys> varg;
     vector<duomenys> kiete;
 
-    paskirstymas(A,varg);
+    paskirstymas(A,B,varg,kiete);
+
     duration=(std::clock() - start) /(double)CLOCKS_PER_SEC;
     cout<<"Skirstymas uztruko"<<duration<<"s"<<endl;
 
-    start=std::clock();
-    paskirstymo_isve(A,varg,pasirinkimas,p);
-    duration=(std::clock() - start) /(double)CLOCKS_PER_SEC;
-    cout<<"Isvedimas uztruko"<<duration<<"s"<<endl;
+    paskirstymo_isve(varg,kiete);
 
     }
 
